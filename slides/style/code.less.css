@@ -1,0 +1,22 @@
+.java_keyword {
+  color: #E3CEAB;
+}
+.java_comment {
+  color: #CC9393;
+}
+.java_plain, .java_type {
+  color: black;
+}
+.code .java_plain, .code .java_type {
+  color: #DCDCDC;
+}
+.java_separator {
+  color: #06A0CE;
+}
+.java_operator {
+  color: #06A0CE;
+}
+.java_literal {
+  color: #51CBBF;
+}
+

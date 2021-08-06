@@ -1,0 +1,1808 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head> 
+    <title>intro-to-gradle-1-day</title> 
+    <meta charset="utf-8" /> 
+    <link rel="stylesheet" href="style/reset.less.css" /> 
+    <link rel="stylesheet" href="style/base.less.css" /> 
+    <link rel="stylesheet" href="style/code.less.css" />  
+    <script src="./deckjs/jquery-1.7.min.js"></script> 
+    <script src="./deckjs/modernizr.custom.js"></script> 
+    <script src="./deckjs/core/deck.core.js"></script> 
+    <link rel="stylesheet" href="./deckjs/core/deck.core.css" /> 
+    <link rel="stylesheet" href="./deckjs/themes/transition/horizontal-slide.css" /> 
+    <script src="./deckjs/extensions/hash/deck.hash.js"></script> 
+    <script src="./deckjs/extensions/notes/deck.notes.js"></script> 
+    <script src="./deckjs/extensions/clone/deck.clone.js"></script> 
+    <script src="./deckjs/extensions/scale-selector/deck.scale-selector.js"></script> 
+    <link rel="stylesheet" href="./deckjs/extensions/scale-selector/deck.scale-selector.css" /> 
+    <link rel="stylesheet" href="./style/slideshow.less.css" /> 
+    <script src="./init.js"></script> 
+    <script type="text/javascript">
+                $(function() {
+                    $(document).bind('deck.change', function(e, from, to) {
+                        $('div.slide-number').text(to);
+                    });
+                });
+            
+    </script> 
+  </head> 
+  <body class=" deck-container"> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Introduction to Gradle</h1> 
+            <p><br /></p> 
+            <p>The fundamentals of building projects with Gradle </p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Install</h2> 
+          <p>You <strong>must</strong> have a JDK and the latest version of Gradle installed.</p> 
+          <p>See the <code><span class="java_plain">setup</span><span class="java_operator">-</span><span class="java_plain">instructions</span><span class="java_separator">.</span><span class="java_plain">pdf</span></code> in your class materials for download links to install a JDK and Gradle.</p> 
+          <h3>HTTP Proxy</h3> 
+          <p>If you're behind a proxy, follow the setup instructions to configure Gradle to use your proxy.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Slides</h2> 
+          <ul> 
+            <li>Available in different formats</li> 
+            <li>Same content as today's presentation</li> 
+          </ul> 
+          <p><br /></p> 
+          <p><img src="images/slides-filesystem.png" alt="Slides" /></p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Practical labs</h2> 
+          <ul> 
+            <li>Each lab has a README with instructions</li> 
+            <li>Take your time and experiment</li> 
+            <li>The labs are not a test!</li> 
+            <li>Hints can be found in the slides</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Objectives</h2> 
+          <ul> 
+            <li>A solid understanding of basic Gradle concepts</li> 
+            <li>Knowledge of how to use the Java plugins (<code><span class="java_plain">application</span></code> and <code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code>)</li> 
+            <li>Basic knowledge of how to work with dependencies</li> 
+            <li>Understanding of features to organize and customize Gradle builds</li> 
+            <li>Exposure to more advanced build capabilities</li> 
+          </ul> 
+          <h3>Ask questions</h3> 
+          <ul> 
+            <li>Please ask questions at any time!</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Topics we won't cover</h2> 
+          <ul> 
+            <li>Android or other JVM language builds</li> 
+            <li>Continuous Integration/Delivery</li> 
+            <li>Advanced plugin development techniques</li> 
+            <li>Advanced dependency management techniques</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Agenda</h2> 
+          <ul> 
+            <li>About Gradle</li> 
+            <li>Gradle overview 
+              <ul> 
+                <li>Build scripts</li> 
+                <li>Using plugins and tasks</li> 
+                <li>Running builds</li> 
+              </ul></li> 
+            <li>Building Java projects</li> 
+            <li>Dependency management basics</li> 
+            <li>Structuring a build</li> 
+            <li>Writing custom build logic</li> 
+            <li>More resources</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Gradle</h1> 
+            <p>About the project</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle</h2> 
+          <p>Gradle is a build and automation tool. </p> 
+          <p>Gradle can automate the building, testing, publishing and deployment of your software.</p> 
+          <p><img src="images/logo-new.png" alt="Gradle Logo" /> </p> 
+          <p style="text-align: center"><a href="https://www.gradle.org">gradle.org</a></p> 
+          <p></p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Project</h2> 
+          <ul> 
+            <li>Open Source, Apache v2 license - Completely free to use</li> 
+            <li>Source code on Github - <a href="https://github.com/gradle/gradle">github.com/gradle/gradle</a></li> 
+            <li>Active user community, centered around <a href="https://discuss.gradle.org">discuss.gradle.org</a></li> 
+            <li>Frequent releases (minor releases roughly every 6-8 weeks)</li> 
+            <li>Strong quality commitment 
+              <ul> 
+                <li>Extensive automated testing (including documentation)</li> 
+                <li>Backwards compatibility &amp; feature lifecycle policy</li> 
+              </ul></li> 
+            <li>Developed by domain experts 
+              <ul> 
+                <li>Gradle, Inc. staff and community contributors</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Documentation</h2> 
+          <ul> 
+            <li><p>User Manual</p> 
+              <ul> 
+                <li>Many chapters and <a href="https://docs.gradle.org/current/samples/index.html">self-contained downloadable samples</a></li> 
+                <li><a href="https://gradle.org/docs/current/userguide/userguide.html">HTML</a></li> 
+                <li><a href="https://gradle.org/docs/current/userguide/userguide.pdf">PDF</a></li> 
+              </ul></li> 
+            <li><p>Build Language Reference (<a href="https://gradle.org/docs/current/dsl/">gradle.org/docs/current/dsl/</a>)</p> 
+              <ul> 
+                <li>Best starting point when authoring build scripts</li> 
+                <li>Javadoc-like, but higher-level</li> 
+                <li>Links into <a href="https://gradle.org/docs/current/javadoc/">Javadoc</a></li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Other Gradle Resources</h2> 
+          <ul> 
+            <li>Install the latest release from <a href="https://gradle.org/install/">gradle.org/install</a></li> 
+            <li>Older Gradle releases <a href="https://gradle.org/releases/">gradle.org/releases</a></li> 
+            <li><a href="https://help.gradle.org">help.gradle.org</a> 
+              <ul> 
+                <li>Portal to other resources</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Getting Information</h2> 
+          <p>Print command line options:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">-</span><span class="java_plain">h</span></code></pre> 
+          <p>Print the available tasks in a project:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">:</span><span class="java_plain">tasks</span></code></pre> 
+          <p>Print basic help information:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">:</span><span class="java_plain">help</span></code></pre> 
+          <p>Getting help on a specific task</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">:</span><span class="java_plain">help&nbsp;</span><span class="java_operator">--</span><span class="java_plain">task&nbsp;taskname</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Best Practices for Running Gradle</h2> 
+          <ul> 
+            <li>Always use the wrapper</li> 
+            <li>Keep up-to-date with new releases 
+              <ul> 
+                <li>Performance bottlenecks are removed</li> 
+                <li>New features are added</li> 
+                <li>Deprecation warnings prevent surprises</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Wrapper</h2> 
+          <p>A way to make sure everyone uses the same version of Gradle to build a project.</p> 
+          <p><img src="images/gradle-wrapper.png" align="right" /></p> 
+          <ul> 
+            <li><strong>gradle-wrapper.jar:</strong> Micro-library for downloading distribution</li> 
+            <li><strong>gradle-wrapper.properties:</strong> Defines distribution download URL and options</li> 
+            <li><strong>gradlew:</strong> Gradle executable for *nix systems</li> 
+            <li><strong>gradlew.bat:</strong> Gradle executable for Windows systems</li> 
+            <li>Downloaded distributions go into your <code><span class="java_plain">GRADLE_USER_HOME</span><span class="java_operator">/</span><span class="java_plain">wrapper</span><span class="java_operator">/</span><span class="java_plain">dists</span></code> directory <br /></li> 
+          </ul> 
+          <p><strong>Running a build with the wrapper:</strong></p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;build</span></code></pre> 
+          <p>The very first time you run a build with the wrapper, Gradle will download a copy of the distribution.</p> 
+        </div>
+      </div>  
+    </section> 
+    <!-- --> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Wrapper task</h2> 
+          <ul> 
+            <li>Bootstrap using the wrapper with your build with the <code><span class="java_plain">wrapper</span></code> task</li> 
+            <li>Wrapper task is built-in and generates: 
+              <ul> 
+                <li>wrapper scripts</li> 
+                <li>wrapper jar</li> 
+                <li>wrapper properties</li> 
+              </ul></li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;wrapper&nbsp;</span><span class="java_operator">--</span><span class="java_plain">gradle</span><span class="java_operator">-</span><span class="java_plain">version</span><span class="java_operator">=</span><span class="java_literal">6.8.3</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>The <code><span class="java_operator">--</span><span class="java_plain">gradle</span><span class="java_operator">-</span><span class="java_plain">version</span></code> flag lets you specify a particular version of Gradle to use.</li> 
+            <li>The <code><span class="java_operator">--</span><span class="java_plain">distribution</span><span class="java_operator">-</span><span class="java_plain">type</span></code> flag lets you specify <code><span class="java_plain">all</span></code> if you want the complete distribution (the default is <code><span class="java_plain">bin</span></code>). The result is larger, but includes the source and documentation.</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <!-- --> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Gradle Build Scans</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Creating build scans</h2> 
+          <ul> 
+            <li><a href="https://scans.gradle.com/">Creating a build scan is free</a>.</li> 
+            <li>Build scans are a centralized and shareable record of a build.</li> 
+            <li>Build scans offer insight into how you are building your software.</li> 
+            <li><strong>All build scans created during this course will be uploaded to the public build scan service</strong>.</li> 
+            <li>A <a href="https://gradle.com/gradle-enterprise-solution-overview/">self-hosted version</a> is also available with more features.</li> 
+            <li>See the <a href="https://ge.gradle.org/scans">latest build scans for the Gradle project itself</a>.</li> 
+          </ul> 
+          <p>We encourage you to generate a build scan if you have a problem with a lab, so we can help you solve your problem. Just run your build with <code><span class="java_operator">--</span><span class="java_plain">scan</span></code>.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Creating build scans</h2> 
+          <ul> 
+            <li>Gradle will ask to accept 'Gradle Terms of Service' before uploading scan data</li> 
+            <li>To allow the upload permanently for a build, add the following to <code><span class="java_plain">settings</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code></li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;com.gradle.enterprise&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;version&nbsp;</span><span class="java_literal">&quot;3.6&quot;</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">gradleEnterprise&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;buildScan&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;termsOfServiceUrl&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;https://gradle.com/terms-of-service&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;termsOfServiceAgree&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;yes&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Gradle Basics</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle DSLs</h2> 
+          <p>Gradle is implemented in Java, with Kotlin and Groovy DSL layers.</p> 
+          <p>Kotlin and Groovy bring:</p> 
+          <ul> 
+            <li>Domain Specific Language (DSL) capabilities</li> 
+            <li>Better readability and comprehensibility</li> 
+            <li>Many useful utilities built-in</li> 
+            <li>IDE support for build scripts (Kotlin in IntelliJ)</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Build Scripts</h2> 
+          <ul> 
+            <li>Files ending in <code><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">.</span><span class="java_plain">kts</span></code> are compiled as Kotlin code</li> 
+            <li>Files ending in <code><span class="java_separator">.</span><span class="java_plain">gradle</span></code> are compiled as Groovy code</li> 
+            <li>Build script files (<code><span class="java_plain">build</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">[.</span><span class="java_plain">kts</span><span class="java_separator">]</span><span class="java_plain"></span></code>) delegate to <a href="https://www.gradle.org/docs/current/dsl/org.gradle.api.Project.html"><code><span class="java_plain">org</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">.</span><span class="java_plain">api</span><span class="java_separator">.</span><span class="java_type">Project</span><span class="java_plain"></span></code></a></li> 
+            <li>Settings script files (<code><span class="java_plain">settings</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">[.</span><span class="java_plain">kts</span><span class="java_separator">]</span><span class="java_plain"></span></code>) delegate to <a href="https://www.gradle.org/docs/current/dsl/org.gradle.api.initialization.Settings.html"><code><span class="java_plain">org</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">.</span><span class="java_plain">api</span><span class="java_separator">.</span><span class="java_plain">initialization</span><span class="java_separator">.</span><span class="java_type">Settings</span><span class="java_plain"></span></code></a></li> 
+            <li>Groovy DSL and Kotlin DSL syntax is similar but may differ in details</li> 
+            <li>The slides use syntax that works in both Groovy DSL and Kotlin DSL</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Typical script files</h2> 
+          <h3>Settings script</h3> 
+          <pre class=" code"><code><span class="java_plain">rootProject</span><span class="java_separator">.</span><span class="java_plain">name&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;name-of-build&quot;</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">include</span><span class="java_separator">(</span><span class="java_literal">&quot;subproject&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">include</span><span class="java_separator">(</span><span class="java_literal">&quot;another-subproject&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code></pre> 
+          <h3>Build script</h3> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;java-library&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;mavenCentral</span><span class="java_separator">()</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;com.google.guava:guava:30.0-jre&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Configuration &amp; Execution</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Build Lifecycle</h2> 
+          <ul> 
+            <li>Initialization Phase 
+              <ul> 
+                <li>Configure environment (init.gradle, gradle.properties)</li> 
+                <li>Find projects and build scripts (settings.gradle)</li> 
+              </ul></li> 
+            <li>Configuration Phase 
+              <ul> 
+                <li>Evaluate all build scripts</li> 
+                <li>Build object model (Gradle -&gt; Project -&gt; Task, etc.)</li> 
+                <li>Build task execution graph</li> 
+              </ul></li> 
+            <li>Execution Phase 
+              <ul> 
+                <li>Execute (subset of) tasks</li> 
+              </ul></li> 
+          </ul> 
+          <p>A <em>key</em> concept to grasp.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Plugins and Tasks</h2> 
+          <p>Tasks are the basic unit of work in Gradle.</p> 
+          <ul> 
+            <li>Plugins provide ready to use tasks</li> 
+            <li>For example the <code><span class="java_plain">application</span></code> plugin adds tasks like <code><span class="java_operator">:</span><span class="java_plain">compileJava</span></code>, <code><span class="java_operator">:</span><span class="java_plain">test</span></code> or <code><span class="java_operator">:</span><span class="java_plain">run</span></code></li> 
+            <li>For individual needs, custom tasks can be created by the user (we will look at that later)</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Discovering tasks</h2> 
+          <p>The built-in task <code><span class="java_operator">:</span><span class="java_plain">tasks</span></code> lists available tasks in a project, either defined in the build script or provided by applied plugins.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">:</span><span class="java_plain">tasks</span></code></pre> 
+          <p>Tasks in the output are organized by assigned <a href="https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:group"><code><span class="java_plain">group</span></code></a> property e.g. <code><span class="java_type">Build</span><span class="java_plain">&nbsp;</span><span class="java_type">Setup</span><span class="java_plain"></span></code> show up under the header <code><span class="java_type">Build</span><span class="java_plain">&nbsp;</span><span class="java_type">Setup</span><span class="java_plain">&nbsp;tasks</span></code>.</p> 
+          <p>The <a href="https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:description"><code><span class="java_plain">description</span></code></a> property describes the purpose of a task.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Built-in tasks</h2> 
+          <p>Every Gradle project provides several tasks out-of-the-box.</p> 
+          <p>Built-in tasks provide useful and commonly used functionality without having to apply any plugins.</p> 
+          <p><strong>Examples:</strong></p> 
+          <ul> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">wrapper</span></code> - Generates the Wrapper files for this build.</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">help</span></code> - Demonstrates how to run Gradle from the command line.</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">dependencies</span></code> - Renders a tree of dependencies defined in the build.</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Tasks provided by plugins</h2> 
+          <p>Applying a plugin, like <code><span class="java_plain">application</span></code> or <code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code>, in the <code><span class="java_plain">build</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code> script adds additional tasks.</p> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;application&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p><strong>Examples:</strong></p> 
+          <ul> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">assemble</span></code> - Assembles the outputs of this project</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">test</span></code> - Runs the unit tests</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">run</span></code> - Runs this project as a JVM application</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">build</span></code> - Assembles and tests this project</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Task Groups</h2> 
+          <p>By default, the tasks report only shows tasks that have a group.</p> 
+          <ul> 
+            <li>Other tasks are hidden, because you usually do not need to call them directly.</li> 
+            <li>Tasks depend on each other and dependencies are automatically executed.</li> 
+            <li>E.g., if you execute <code><span class="java_operator">:</span><span class="java_plain">assemble</span></code> it automatically executes <code><span class="java_operator">:</span><span class="java_plain">compileJava</span></code></li> 
+          </ul> 
+          <p>Still, you can use <code><span class="java_operator">:</span><span class="java_plain">tasks&nbsp;</span><span class="java_operator">--</span><span class="java_plain">all</span></code> to see these tasks.</p> 
+          <p><strong>Examples of hidden tasks:</strong></p> 
+          <ul> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">compileJava</span></code> - Compiles main Java source.</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">compileTestJava</span></code> - Compiles test Java source.</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">processResources</span></code> - Processes main resources.</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">processTestResources</span></code> - Processes test resources.</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Task Dependencies</h2> 
+          <ul> 
+            <li>Tasks depend on each other</li> 
+            <li>Semantic relationship (A produces something that B consumes)</li> 
+            <li>E.g., The <code><span class="java_operator">:</span><span class="java_plain">jar</span></code> task picks up the classes compiled by the <code><span class="java_operator">:</span><span class="java_plain">compileJava</span></code> task</li> 
+            <li>Executed tasks form a directed acyclic graph</li> 
+            <li>E.g., if you execute <code><span class="java_operator">:</span><span class="java_plain">assemble</span></code> on a Java <code><span class="java_plain">application</span></code> project many tasks are executed</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;</span><span class="java_operator">:</span><span class="java_plain">assemble&nbsp;</span><span class="java_operator">--</span><span class="java_plain">console</span><span class="java_operator">=</span><span class="java_plain">plain</span>
+<span class="java_plain"></span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">compileJava</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">processResources&nbsp;NO</span><span class="java_operator">-</span><span class="java_plain">SOURCE</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">classes</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">jar</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">startScripts</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">distTar</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">distZip</span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">assemble</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Fuzzy name matching</h2> 
+          <p>Save your fingers by only typing the bare minimum to identify a task.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;cJ</span>
+<span class="java_plain"></span>
+<span class="java_operator">&gt;</span><span class="java_plain">&nbsp;</span><span class="java_type">Task</span><span class="java_plain">&nbsp;</span><span class="java_operator">:</span><span class="java_plain">compileJava</span></code></pre> 
+          <p>Gradle understands how to match against camel-case task names. Ambiguous matches fail the build.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Lab</h1> 
+            <p style="font-weight: bold;">01-lab-gradle-basics</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Plugins</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Plugins</h2> 
+          <p>Plugins are just packaged build logic.</p> 
+          <p>Plugins can do anything that you can do in a build script, and vice versa.</p> 
+          <p>Plugins aid:</p> 
+          <ol> 
+            <li><strong>Reuse</strong> - avoid copy/paste</li> 
+            <li><strong>Encapsulation</strong> - hide implementation detail behind a DSL</li> 
+            <li><strong>Modularity</strong> - clean, maintainable code</li> 
+            <li><strong>Composition</strong> - plugins can complement each other</li> 
+          </ol> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Typical Plugin Functions</h2> 
+          <p>Some things plugins typically do:</p> 
+          <ul> 
+            <li><strong>Extend the Gradle model</strong> with new elements</li> 
+            <li>Configure the project according to <strong>conventions</strong> 
+              <ul> 
+                <li>Add new tasks</li> 
+                <li>Configure existing model elements</li> 
+                <li>Add configuration rules for future elements</li> 
+              </ul></li> 
+            <li>Apply some very <strong>specific configuration</strong> 
+              <ul> 
+                <li>Configure the project for very specific standards</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Applying plugins</h2> 
+          <p>Plugins are applied in a <code><span class="java_plain">plugins</span></code> block:</p> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;name-of-plugin&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p>Plugins can also have versions (if they are not built-in plugins)</p> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;name-of-plugin&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;version&nbsp;</span><span class="java_literal">&quot;1.0&quot;</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>Gradle discovers versioned plugins in the <a href="https://plugins.gradle.org/">Gradle Plugin Portal</a></li> 
+            <li>You can configure <a href="https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_management">other repositories as sources for plugins</a>.</li> 
+          </ul> 
+          <p>Plugins can be defined <a href="https://docs.gradle.org/current/samples/sample_convention_plugins.html">as part of the build itself to reuse custom logic or build configuration</a>.</p> 
+          <ul> 
+            <li>We will get back to this topic later.</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Building Java projects</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Java Plugins</h2> 
+          <ul> 
+            <li><code><span class="java_plain">java</span></code> plugin 
+              <ul> 
+                <li>The basis of Java development with Gradle</li> 
+                <li>&quot;main&quot; and &quot;test&quot; source set conventions</li> 
+                <li>Incremental compilation</li> 
+                <li>Dependency management</li> 
+                <li>JUnit &amp; TestNG testing</li> 
+                <li>Javadoc generation</li> 
+              </ul></li> 
+            <li><code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code> plugin 
+              <ul> 
+                <li>Automatically applies <code><span class="java_plain">java</span></code> plugin</li> 
+                <li>Adds the ability to declare &quot;api&quot; dependencies</li> 
+              </ul></li> 
+            <li><code><span class="java_plain">application</span></code> plugin 
+              <ul> 
+                <li>Automatically applies <code><span class="java_plain">java</span></code> plugin</li> 
+                <li>Requires a Main class to run and package an application</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>JVM Language Plugins</h2> 
+          <ul> 
+            <li>Other JVM plugins can be combined with <code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code> or <code><span class="java_plain">application</span></code> 
+              <ul> 
+                <li><code><span class="java_plain">groovy</span></code>, <code><span class="java_plain">scala</span></code>, <code><span class="java_plain">org</span><span class="java_separator">.</span><span class="java_plain">jetbrains</span><span class="java_separator">.</span><span class="java_plain">kotlin</span><span class="java_separator">.</span><span class="java_plain">jvm</span></code></li> 
+              </ul></li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;To&nbsp;write&nbsp;an&nbsp;application&nbsp;in&nbsp;Kotlin:</span>
+<span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;application&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;org.jetbrains.kotlin.jvm&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;version&nbsp;</span><span class="java_literal">&quot;1.4.31&quot;</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;To&nbsp;write&nbsp;a&nbsp;library&nbsp;in&nbsp;Groovy:</span>
+<span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;java-library&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;groovy&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <!-- --> 
+    <!-- --> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2><code><span class="java_plain">api</span></code> vs <code><span class="java_plain">implementation</span></code></h2> 
+          <p>Java libraries can <a href="https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_separation">separate their implementation and API dependencies</a>. </p> 
+          <p>Dependencies appearing in the <code><span class="java_plain">api</span></code> will be transitively exposed to consumers of the library when compiling. Dependencies found in the <code><span class="java_plain">implementation</span></code> will not be exposed to consumers when compiling but will be available at runtime.</p> 
+          <p>This has many advantages over a single <code><span class="java_plain">compile</span></code> time dependency scope.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Source Sets</h2> 
+          <p>A logical compilation/processing unit of sources.</p> 
+          <ul> 
+            <li>Java source files</li> 
+            <li>Non compiled source files (e.g. properties files)</li> 
+            <li>Classpath separation (compile &amp; runtime)</li> 
+            <li>Output class files</li> 
+            <li>Compilation tasks</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;Example:&nbsp;change&nbsp;layout&nbsp;to&nbsp;a&nbsp;typial&nbsp;Eclipse&nbsp;project&nbsp;layout</span>
+<span class="java_plain">sourceSets&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;main&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;java&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcDir</span><span class="java_separator">(</span><span class="java_literal">&quot;src&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;default&nbsp;was&nbsp;&quot;src/main/java&quot;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;resources&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcDir</span><span class="java_separator">(</span><span class="java_literal">&quot;resource&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;default&nbsp;was&nbsp;&quot;src/main/resources&quot;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <!-- --> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Lifecycle Tasks</h2> 
+          <p>The <code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code> plugin, and most other plugins, provides a set of “lifecycle” tasks for common tasks.</p> 
+          <ul> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">clean</span></code> - delete all build output</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">classes</span></code> - compile code, process resources</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">test</span></code> - run tests</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">assemble</span></code> - make all archives (e.g. zips, jars, wars etc.)</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">check</span></code> - run all quality checks (e.g. tests + static code analysis)</li> 
+            <li><code><span class="java_operator">:</span><span class="java_plain">build</span></code> - combination of <code><span class="java_operator">:</span><span class="java_plain">assemble</span></code> &amp; <code><span class="java_operator">:</span><span class="java_plain">check</span></code></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Testing</h2> 
+          <p>Built-in support for JUnit 4, JUnit 5 and TestNG.</p> 
+          <ul> 
+            <li>Pre-configured &quot;test&quot; task</li> 
+            <li>Automatic test detection</li> 
+            <li>Forked JVM execution</li> 
+            <li>Parallel execution</li> 
+            <li>Configurable console output</li> 
+            <li>Human-readable HTML reports</li> 
+            <li>Machine-readable reports for further processing (e.g. XML)</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Parallel Test Execution</h2> 
+          <p>Gradle can run test classes in parallel</p> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;Kotlin&nbsp;DSL</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">test&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;maxParallelForks&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">8</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Groovy&nbsp;DSL</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">named</span><span class="java_separator">(</span><span class="java_literal">&quot;test&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;maxParallelForks&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">8</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>IDE integration</h2> 
+          <ul> 
+            <li><a href="https://projects.eclipse.org/projects/tools.buildship">Eclipse Buildship</a></li> 
+            <li><a href="https://www.jetbrains.com/help/idea/gradle.html">IntelliJ</a></li> 
+          </ul> 
+          <p>IDEs can delegate to Gradle to run tests and other arbitrary tasks.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Configuring details (Kotlin DSL)</h2> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;General&nbsp;project&nbsp;configuration</span>
+<span class="java_plain">version&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;1.0&quot;</span><span class="java_plain"></span>
+<span class="java_plain">group&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;com.example&quot;</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Java&nbsp;specific&nbsp;configuration</span>
+<span class="java_plain">java&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;toolchain&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;languageVersion</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_type">JavaLanguageVersion</span><span class="java_separator">.</span><span class="java_plain">of</span><span class="java_separator">(</span><span class="java_literal">11</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Task&nbsp;specific&nbsp;configuration</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">test&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;useJUnitPlatform</span><span class="java_separator">()</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;JUnit&nbsp;5</span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">jar&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;manifest&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;attributes</span><span class="java_separator">(</span><span class="java_literal">&quot;Implementation-Version&quot;</span><span class="java_plain">&nbsp;to&nbsp;project</span><span class="java_separator">.</span><span class="java_plain">version</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Configuring details (Groovy DSL)</h2> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;General&nbsp;project&nbsp;configuration</span>
+<span class="java_plain">version&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;1.0&quot;</span><span class="java_plain"></span>
+<span class="java_plain">group&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;com.example&quot;</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Java&nbsp;specific&nbsp;configuration</span>
+<span class="java_plain">java&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;toolchain&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;languageVersion</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_type">JavaLanguageVersion</span><span class="java_separator">.</span><span class="java_plain">of</span><span class="java_separator">(</span><span class="java_literal">11</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Task&nbsp;specific&nbsp;configuration</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">named</span><span class="java_separator">(</span><span class="java_literal">&quot;test&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;useJUnitPlatform</span><span class="java_separator">()</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;JUnit&nbsp;5</span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">named</span><span class="java_separator">(</span><span class="java_literal">&quot;jar&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;manifest&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;attributes</span><span class="java_separator">(</span><span class="java_literal">&quot;Implementation-Version&quot;</span><span class="java_operator">:</span><span class="java_plain">&nbsp;project</span><span class="java_separator">.</span><span class="java_plain">version</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Lab</h1> 
+            <p style="font-weight: bold;">02-java-plugins</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Dependency Management</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependency Management</h2> 
+          <p>Gradle supports managed dependencies.</p> 
+          <p>Basics</p> 
+          <ul> 
+            <li>Declare repositories to find binary dependencies</li> 
+            <li>Declare dependencies using coordinates (group, artifact name, version)</li> 
+          </ul> 
+          <p>Advanced</p> 
+          <ul> 
+            <li>Declare dependency constraints to control versions and resolve version conflicts</li> 
+            <li>Select from multiple variants for a module</li> 
+          </ul> 
+          <p>Publishing</p> 
+          <ul> 
+            <li>Publish your own libraries to repositories</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Repositories</h2> 
+          <ul> 
+            <li>Any Maven or Ivy repository can be used</li> 
+            <li>Very flexible layouts are possible for Ivy repositories</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;mavenCentral</span><span class="java_separator">()</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;maven&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;https://repo.example.com&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;ivy&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;https://repo.example.com&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;layout</span><span class="java_separator">(</span><span class="java_literal">&quot;gradle&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;default</span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p>Starting with Gradle 6.8, <a href="https://docs.gradle.org/nightly/userguide/declaring_repositories.html#sub:centralized-repository-declaration">repositories can be defined in <code><span class="java_plain">settings</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code></a>.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Configurations for Declaration</h2> 
+          <p>Dependencies are declared on <em>configurations</em>. <a href="https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph">See <code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code> defined configurations</a>.</p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;internal&nbsp;dependencies&nbsp;of&nbsp;library&nbsp;</span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;api</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;dependencies&nbsp;library&nbsp;re-exports&nbsp;for&nbsp;compilation</span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;runtimeOnly</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;dependencies&nbsp;only&nbsp;for&nbsp;runtime&nbsp;of&nbsp;library&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;compileOnly</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;internal&nbsp;dependencies&nbsp;of&nbsp;library&nbsp;(hidden&nbsp;at&nbsp;runtime)&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;compileOnlyApi</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;re-exported&nbsp;dependencies&nbsp;(hidden&nbsp;at&nbsp;runtime)&nbsp;</span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;testImplementation</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;dependencies&nbsp;for&nbsp;testing&nbsp;library&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;testCompileOnly</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;dependencies&nbsp;only&nbsp;for&nbsp;compiling&nbsp;tests</span>
+<span class="java_plain">&nbsp;&nbsp;testRuntimeOnly</span><span class="java_separator">(</span><span class="java_literal">&quot;...&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;dependencies&nbsp;only&nbsp;for&nbsp;running&nbsp;tests</span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p>See <a href="https://docs.gradle.org/current/userguide/declaring_dependencies.html">Declaring Dependencies</a> in User Manual for more details.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependencies with a version</h2> 
+          <ul> 
+            <li>Declaring dependencies to modules</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;compact&nbsp;declaration&nbsp;assumes&nbsp;a&nbsp;&quot;required&quot;&nbsp;version</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;com.fasterxml.jackson.core:jackson-core:2.11.3&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;declaration&nbsp;using&nbsp;rich&nbsp;version&nbsp;API,&nbsp;this&nbsp;is&nbsp;equivalent</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;com.fasterxml.jackson.core:jackson-core&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;Must&nbsp;be&nbsp;at&nbsp;least&nbsp;2.11.3,&nbsp;but&nbsp;may&nbsp;be&nbsp;upgraded</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;require</span><span class="java_separator">(</span><span class="java_literal">&quot;2.11.3&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependencies without a version</h2> 
+          <ul> 
+            <li>You can declare dependencies without versions</li> 
+            <li>You can depend on a platform - aka Bill-of-Material (BOM) - to pull in versions; such as 
+              <ul> 
+                <li><a href="https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies-gradle-bom-support">org.springframework.boot:spring-boot-dependencies</a></li> 
+                <li><a href="https://junit.org/junit5/docs/current/user-guide/#dependency-metadata-junit-bom">org.junit.junit-bom</a></li> 
+                <li><a href="https://github.com/FasterXML/jackson-bom">com.fasterxml.jackson:jackson-bom</a></li> 
+                <li>A local Gradle project that uses the <a href="https://docs.gradle.org/current/userguide/java_platform_plugin.html"><code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">platform</span></code> plugin</a></li> 
+              </ul></li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;platform&nbsp;(BOM)&nbsp;provides&nbsp;versions</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_plain">platform</span><span class="java_separator">(</span><span class="java_literal">&quot;com.fasterxml.jackson:jackson-bom:2.11.3&quot;</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;compact&nbsp;declaration&nbsp;without&nbsp;a&nbsp;version</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;com.fasterxml.jackson.core:jackson-core&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>SNAPSHOT and Dynamic Deps</h2> 
+          <p>Version numbers ending in <code><span class="java_operator">-</span><span class="java_plain">SNAPSHOT</span></code> are <em>changing dependencies</em>.</p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;org.company:some-lib:1.0-SNAPSHOT&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p><a href="https://docs.gradle.org/current/userguide/dynamic_versions.html">Dynamic dependencies</a> do not refer to concrete versions.</p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;org.company:some-lib:2.+&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;latest&nbsp;2.x&nbsp;version</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;org:somename:latest.release&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;latest&nbsp;stable&nbsp;version</span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p><strong>Be careful</strong>. Changing and dynamic dependencies break reproducibility of builds and cause Gradle to re-resolve dependencies frequently.</p> 
+          <p>You can combine them with <a href="https://docs.gradle.org/current/userguide/dependency_locking.html">dependency locking</a> to fix that.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependency Resolution</h2> 
+          <ul> 
+            <li>Tasks can have <em>resolvable configurations</em> as inputs.</li> 
+            <li>Right before executing such a task, Gradle fetches the dependencies (including transitives). 
+              <ul> 
+                <li><code><span class="java_operator">:</span><span class="java_plain">compileJava</span></code> has the <em>compileClasspath</em> as input</li> 
+                <li><code><span class="java_operator">:</span><span class="java_plain">run</span></code> has the <em>runtimeClasspath</em> as input.</li> 
+              </ul></li> 
+          </ul> 
+          <p>Declared dependencies (green) are included in resolvable configurations (blue):</p> 
+          <p><img src="images/java-library-ignore-deprecated-main.png" alt="Java Library Configurations" /></p> 
+          <p><em>apiElements</em> and <em>runtimeElements</em> (<em>consumable configurations</em>) represent the dependencies re-exported for compilation and runtime. </p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Transitive Dependencies</h2> 
+          <p>Gradle fetches dependencies of your dependencies. This can introduce version conflicts.</p> 
+          <p>Only one version of a given dependency can be part of a resolution result.</p> 
+          <p>Options for dealing with conflicts (details on next slides):</p> 
+          <ul> 
+            <li>Often the default behavior (highest version number wins) is sufficient</li> 
+            <li>Use <a href="https://docs.gradle.org/current/userguide/rich_versions.html">rich version constraints</a> to limit the range of allowed versions or enforce a single version 
+              <ul> 
+                <li>e.g., enforce a version, or a version range, with <a href="https://docs.gradle.org/current/userguide/dependency_downgrade_and_exclude.html#sec:enforcing_dependency_version">strict versions</a></li> 
+              </ul></li> 
+            <li><a href="https://docs.gradle.org/current/userguide/dependency_downgrade_and_exclude.html#sec:excluding-transitive-deps">Exclude</a> conflicting dependencies completely</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Transitive dependencies (cont)</h2> 
+          <p>More advanced options: </p> 
+          <ul> 
+            <li>Use <a href="https://docs.gradle.org/current/userguide/component_metadata_rules.html">component metadata rules</a> to fix transitive dependency declarations</li> 
+            <li><a href="https://docs.gradle.org/current/userguide/dependency_version_alignment.html">Version alignment</a></li> 
+            <li><a href="https://docs.gradle.org/current/userguide/dependency_capability_conflict.html">Handling mutually exclusive dependencies</a></li> 
+            <li><a href="https://docs.gradle.org/current/userguide/resolution_rules.html">Customizing resolution through resolution rules</a></li> 
+            <li><a href="https://docs.gradle.org/current/userguide/resolution_strategy_tuning.html">Resolution strategy tuning</a></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Constraints with rich versions</h2> 
+          <ul> 
+            <li>Declared in a <strong>constraints {}</strong> block</li> 
+            <li>Use rich versions (prefer, require, strictly, reject) - see <a href="https://docs.gradle.org/current/userguide/rich_versions.html">user manual</a> for details</li> 
+            <li><strong>Important</strong> This doesn't add a dependency. This influences which version is selected</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;constraints&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api</span><span class="java_separator">(</span><span class="java_literal">&quot;com.google.guava:guava:24.1.1-jre!!&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;shortcut&nbsp;for&nbsp;strictly</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;api</span><span class="java_separator">(</span><span class="java_literal">&quot;com.google.inject:guice&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;version&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;strictly</span><span class="java_separator">(</span><span class="java_literal">&quot;[4.0,&nbsp;5.0)&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;require(&quot;4.0&quot;)</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;prefer(&quot;4.2.0&quot;)</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;reject(&quot;4.2.1&quot;)</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;rejectAll()</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;because</span><span class="java_separator">(</span><span class="java_literal">&quot;Only&nbsp;version&nbsp;4&nbsp;of&nbsp;Guice&nbsp;has&nbsp;all&nbsp;DI&nbsp;features&nbsp;we&nbsp;need.&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Constraints with rich versions</h2> 
+          <ul> 
+            <li><strong>require(&quot;4.0&quot;)</strong> - Use version &quot;4.0&quot;, higher versions are allowed in case there is a conflict 
+              <ul> 
+                <li>Most common constraint; a simple string version like &quot;4.0&quot; is treated as <em>require</em></li> 
+              </ul></li> 
+            <li><strong>strictly(&quot;4.0&quot;)</strong> - Use version &quot;4.0&quot;; if there is a conflict, still use &quot;4.0&quot; (or fail) 
+              <ul> 
+                <li>Short notation is &quot;4.0!!&quot;</li> 
+              </ul></li> 
+            <li><strong>strictly(&quot;[4.0, 5.0)&quot;)</strong> - Use a version from range; other constraints may influence which one</li> 
+            <li><strong>reject(&quot;4.2.1&quot;)</strong> - Whatever is selected due to other rules, never select &quot;4.2.1&quot;</li> 
+            <li><strong>rejectAll()</strong> - Always fail if a dependency is in the result (for all versions of that dependency)</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Excludes</h2> 
+          <p>If you depend on a library, and you do not need a transitive dependency because you do not use a certain part of that library, you can <a href="https://docs.gradle.org/current/userguide/dependency_downgrade_and_exclude.html#sec:excluding-transitive-deps">exclude it</a>. </p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;commons-beanutils:commons-beanutils:1.9.4&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;We&nbsp;only&nbsp;use&nbsp;'PropertyUtils.setSimpleProperty()'</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;which&nbsp;does&nbsp;not&nbsp;require&nbsp;commons-collections</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;exclude&nbsp;group</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;commons-collections&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;module</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;commons-collections&quot;</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>Sometimes, excludes are used for things better solved with constraints 
+              <ul> 
+                <li>E.g. exclude a needed dependency just because it has the wrong version</li> 
+              </ul></li> 
+            <li>In Maven, excludes are often the only solution, because constraints are not supported</li> 
+            <li>In Gradle, double check if using exclude is the best solution</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Unmanaged Dependencies</h2> 
+          <p>You can also define dependencies directly to local files. This is not recommended, but can be useful during migration from an existing build setup that does not have managed dependencies.</p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_plain">fileTree</span><span class="java_separator">(</span><span class="java_plain">dir</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;lib&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;include</span><span class="java_operator">:</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;*.jar&quot;</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Component Metadata</h2> 
+          <ul> 
+            <li>Modules in repositories have metadata which e.g. contains the dependency definitions</li> 
+            <li>When downloading modules from repositories, Gradle fetches the metadata for additional information 
+              <ul> 
+                <li>E.g. transitive dependencies and their versions</li> 
+              </ul></li> 
+            <li>Gradle supports three metadata formats 
+              <ul> 
+                <li>Gradle Module Metadata (GMM): <code><span class="java_separator">.</span><span class="java_plain">module</span></code> file</li> 
+                <li>Maven POM: <code><span class="java_separator">.</span><span class="java_plain">pom</span></code> file</li> 
+                <li>Ivy XML: <code><span class="java_plain">ivy</span><span class="java_separator">.</span><span class="java_plain">xml</span></code> file</li> 
+              </ul></li> 
+            <li>GMM is a rich format and compliments one of the other formats 
+              <ul> 
+                <li>E.g. <code><span class="java_plain">org</span><span class="java_separator">.</span><span class="java_plain">junit</span><span class="java_separator">.</span><span class="java_plain">jupiter</span><span class="java_operator">:</span><span class="java_plain">junit</span><span class="java_operator">-</span><span class="java_plain">jupiter</span><span class="java_operator">-</span><span class="java_plain">api</span></code> has both a <code><span class="java_separator">.</span><span class="java_plain">pom</span></code> and a <code><span class="java_separator">.</span><span class="java_plain">module</span></code> file. Tools like Maven or older Gradle versions can only understand the pom file. Recent Gradle versions can read the <code><span class="java_separator">.</span><span class="java_plain">module</span></code> file with more information about the module (e.g. rich versions).</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Component Metadata Rules</h2> 
+          <p>Relying on the metadata of a component you do not publish yourself can lead to wrong dependency resolution results, if the metadata is incomplete or wrong.</p> 
+          <ul> 
+            <li>Many modules today are published with POM metadata only and miss information that cannot be represented in POM.</li> 
+            <li>Sometimes, a mistake was made and some information the metadata is wrong.</li> 
+          </ul> 
+          <p><a href="https://docs.gradle.org/current/userguide/component_metadata_rules.html">Component metadata rules</a> are a mechanism to modify the metadata after it has been downloaded from a repository.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependency Cache</h2> 
+          <p>Gradle caches everything it downloads: artifacts (e.g. jars) and metadata.</p> 
+          <p>Default location: <code><span class="java_operator">~/</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_operator">/</span><span class="java_plain">caches</span><span class="java_operator">/</span><span class="java_separator">...</span><span class="java_plain"></span></code>.</p> 
+          <ul> 
+            <li>Multi-process safe</li> 
+            <li>Source location aware</li> 
+            <li>Optimized for reading (finding dependencies is fast)</li> 
+            <li>Checksum based storage</li> 
+            <li>Avoids unnecessary downloading 
+              <ul> 
+                <li>Finds local candidates</li> 
+                <li>Uses checksums/etags</li> 
+              </ul></li> 
+          </ul> 
+          <p>The cache can be <a href="https://docs.gradle.org/current/userguide/dependency_resolution.html#sub:ephemeral-ci-cache">relocated</a> to avoid repeating downloads in ephemeral CI setups. </p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependency Cache</h2> 
+          <p>Dynamic and SNAPSHOT (changing) dependency information is only cached for a certain period - default TTL is 24 hours.</p> 
+          <pre class=" code"><code><span class="java_plain">configurations</span><span class="java_separator">.</span><span class="java_plain">all&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;resolutionStrategy</span><span class="java_separator">.</span><span class="java_plain">cacheChangingModulesFor</span><span class="java_separator">(</span><span class="java_literal">4</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;hours&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;resolutionStrategy</span><span class="java_separator">.</span><span class="java_plain">cacheDynamicVersionsFor</span><span class="java_separator">(</span><span class="java_literal">10</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;minutes&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li><a href="https://docs.gradle.org/current/userguide/command_line_interface.html#sec:command_line_execution_options"><code><span class="java_operator">--</span><span class="java_plain">offline</span></code></a> - don't look for updates, regardless of TTL</li> 
+            <li><a href="https://docs.gradle.org/current/userguide/dynamic_versions.html#sec:refreshing-dependencies"><code><span class="java_operator">--</span><span class="java_plain">refresh</span><span class="java_operator">-</span><span class="java_plain">dependencies</span></code></a> - look for updates, regardless of TTL 
+              <ul> 
+                <li>Gradle will re-download all metadata. Actual artifacts, like Jars, may be taken from cache if their content (checked via hash) has not changed.</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Dependency Reports</h2> 
+          <p>View the dependency graph via built-in task.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;</span><span class="java_operator">:&lt;</span><span class="java_plain">subproject</span><span class="java_operator">&gt;:</span><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">[</span><span class="java_operator">--</span><span class="java_plain">configuration&nbsp;&laquo;name&raquo;</span><span class="java_separator">]</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;</span><span class="java_operator">:</span><span class="java_plain">app</span><span class="java_operator">:</span><span class="java_plain">dependencies&nbsp;</span><span class="java_operator">--</span><span class="java_plain">configuration&nbsp;compileClasspath</span></code></pre> 
+          <p>View a dependency in the graph via built-in task.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;</span><span class="java_operator">:&lt;</span><span class="java_plain">subproject</span><span class="java_operator">&gt;:</span><span class="java_plain">dependencyInsight&nbsp;</span><span class="java_operator">--</span><span class="java_plain">dependency&nbsp;&laquo;name&raquo;&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">--</span><span class="java_plain">configuration&nbsp;&laquo;name&raquo;</span>
+<span class="java_plain"></span>
+<span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;</span><span class="java_operator">:</span><span class="java_plain">app</span><span class="java_operator">:</span><span class="java_plain">dependencyInsight&nbsp;</span><span class="java_operator">--</span><span class="java_plain">dependency&nbsp;com</span><span class="java_separator">.</span><span class="java_plain">google</span><span class="java_separator">.</span><span class="java_plain">guava</span><span class="java_operator">:</span><span class="java_plain">guava&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_operator">--</span><span class="java_plain">configuration&nbsp;runtimeClasspath</span></code></pre> 
+          <p>Explore dependencies in a build scan - navigate to &quot;Dependencies&quot; tab.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;</span><span class="java_operator">:</span><span class="java_plain">app</span><span class="java_operator">:</span><span class="java_plain">build&nbsp;</span><span class="java_operator">--</span><span class="java_plain">scan</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Lab</h1> 
+            <p style="font-weight: bold;">03-dependency-management</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Publishing</h2> 
+          <ul> 
+            <li>Publish your artifacts to any Maven/Ivy repository</li> 
+            <li>Metadata file (<code><span class="java_separator">.</span><span class="java_plain">module</span></code> + <code><span class="java_separator">.</span><span class="java_plain">pom</span></code>/<code><span class="java_plain">ivy</span><span class="java_separator">.</span><span class="java_plain">xml</span></code>) is generated</li> 
+            <li>Repository metadata (e.g. <code><span class="java_plain">maven</span><span class="java_operator">-</span><span class="java_plain">metadata</span><span class="java_separator">.</span><span class="java_plain">xml</span></code>) is generated</li> 
+            <li><a href="https://docs.gradle.org/current/userguide/publishing_maven.html">Maven Publish Plugin</a> for publishing to Maven repositories</li> 
+            <li><a href="https://docs.gradle.org/current/userguide/publishing_ivy.html">Ivy Publish Plugin</a> for publishing to Ivy repositories</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Publishing to Maven Repositories</h2> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;java-library&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;maven-publish&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">publishing&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;publications&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;create</span><span class="java_operator">&lt;</span><span class="java_type">MavenPublication</span><span class="java_operator">&gt;</span><span class="java_separator">(</span><span class="java_literal">&quot;maven&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;create(&quot;maven&quot;,&nbsp;MavenPublication)&nbsp;{&nbsp;&lt;-&nbsp;Groovy&nbsp;DSL</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from</span><span class="java_separator">(</span><span class="java_plain">components</span><span class="java_separator">[</span><span class="java_literal">&quot;java&quot;</span><span class="java_separator">])</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;maven&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;uri</span><span class="java_separator">(</span><span class="java_literal">&quot;https://my.org/m2repo&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>For Artifactory, JFrog provides an <code><span class="java_plain">artifactory</span><span class="java_operator">-</span><span class="java_plain">publish</span></code> plugin</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Structuring Builds</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Structuring Builds</h2> 
+          <p>Two mechanisms</p> 
+          <ul> 
+            <li>Multi-project builds 
+              <ul> 
+                <li>One build with multiple subprojects</li> 
+                <li>Usually released together</li> 
+              </ul></li> 
+            <li>Composite builds 
+              <ul> 
+                <li>Multiple builds put together into one product</li> 
+                <li>Each build may release separately</li> 
+                <li>Each build has one purpose</li> 
+              </ul></li> 
+          </ul> 
+          <h3>Real world examples</h3> 
+          <ul> 
+            <li><a href="https://github.com/spring-projects/spring-boot">Spring Boot</a></li> 
+            <li><a href="https://github.com/gradle/gradle">Gradle</a></li> 
+            <li><a href="https://github.com/apache/groovy">Groovy</a></li> 
+            <li><a href="https://github.com/spockframework/spock">Spock</a></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Multi-project Builds</h2> 
+          <p>To structure one &quot;software component&quot; internally.</p> 
+          <ul> 
+            <li>Flexible directory layout</li> 
+            <li>Project dependencies &amp; partial builds</li> 
+            <li>Each project can use different plugins</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Composite builds</h2> 
+          <p>To structure a &quot;software product&quot; composed of multiple &quot;software components&quot;.</p> 
+          <ul> 
+            <li><a href="https://docs.gradle.org/current/userguide/composite_builds.html#composite_build_intro">Composite builds</a> are a way to combine multiple builds into a single build.</li> 
+            <li>A composite build is made up of a root build and one or more &quot;included builds&quot;</li> 
+            <li>You can use composite builds to combine independently developed builds or decompose a large build into separate chunks.</li> 
+            <li>To make one build know to each other, use <code><span class="java_plain">includeBuild</span><span class="java_separator">(</span><span class="java_literal">&quot;path/to/build&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code> in <code><span class="java_plain">settings</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code></li> 
+            <li>Learn more from the <a href="https://docs.gradle.org/current/samples/index.html#build_organization">composite build samples</a>.</li> 
+          </ul> 
+          <p>We focus on multi-project builds today, but the sample we will look at could be converted into a composite build as well.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Defining a Multi-project Build</h2> 
+          <ul> 
+            <li>Build structure is defined in <code><span class="java_plain">settings</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code></li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;define&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;build&nbsp;(defaults&nbsp;to&nbsp;directory&nbsp;name)</span>
+<span class="java_plain">rootProject</span><span class="java_separator">.</span><span class="java_plain">name&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;main&quot;</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;declare&nbsp;projects:&nbsp;</span>
+<span class="java_plain">include</span><span class="java_separator">(</span><span class="java_literal">&quot;api&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;shared&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;webservice&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>You can customize location and build script name for each project (usually not needed)</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;by&nbsp;default,&nbsp;api&nbsp;subproject&nbsp;is&nbsp;in&nbsp;directory&nbsp;'api'</span>
+<span class="java_plain">project</span><span class="java_separator">(</span><span class="java_literal">&quot;:api&quot;</span><span class="java_separator">).</span><span class="java_plain">projectDir&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;file</span><span class="java_separator">(</span><span class="java_literal">&quot;/myLocation&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;by&nbsp;default:&nbsp;build&nbsp;files&nbsp;are&nbsp;&quot;build.gradle&quot;&nbsp;or&nbsp;&quot;build.gradle.kts&quot;</span>
+<span class="java_plain">project</span><span class="java_separator">(</span><span class="java_literal">&quot;:shared&quot;</span><span class="java_separator">).</span><span class="java_plain">buildFileName&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_literal">&quot;shared.gradle&quot;</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Task/Project Paths</h2> 
+          <ul> 
+            <li>All projects have a path that uniquely identifies them.</li> 
+            <li>Gradle uses <code><span class="java_operator">:</span><span class="java_plain"></span></code> as a path separator.</li> 
+            <li>When running tasks on the command-line, you can combine the project path and the task name to select a task to execute. 
+              <ul> 
+                <li><code><span class="java_operator">:</span><span class="java_plain"></span></code> refers to the root project</li> 
+                <li><code><span class="java_operator">:</span><span class="java_plain">clean</span></code> means to run the clean task in the root project only</li> 
+                <li><code><span class="java_operator">:</span><span class="java_plain">api</span></code> refers to the api project</li> 
+                <li><code><span class="java_operator">:</span><span class="java_plain">api</span><span class="java_operator">:</span><span class="java_plain">clean</span></code> means to run the clean task in the api project only</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Implicit task selection</h2> 
+          <p>Running a task found only in subprojects from the root project will implicitly execute those tasks in the subproject</p> 
+          <p>Runs clean in all subprojects:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;clean</span></code></pre> 
+          <p>Runs assemble in all subprojects:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;assemble</span></code></pre> 
+          <p>Runs test in all subprojects:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;test</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Fuzzy name matching</h2> 
+          <p>Like tasks, fuzzy name matching works for project paths too. </p> 
+          <p>If you had a project named <code><span class="java_plain">really</span><span class="java_operator">-</span><span class="java_type">long</span><span class="java_operator">-</span><span class="java_plain">name</span></code>, you could run clean in that project with:</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;</span><span class="java_separator">.</span><span class="java_operator">/</span><span class="java_plain">gradlew&nbsp;rLN</span><span class="java_operator">:</span><span class="java_plain">clean</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Project Dependencies</h2> 
+          <p>Instead of using <code><span class="java_plain">group</span><span class="java_operator">:</span><span class="java_plain">name</span><span class="java_operator">:</span><span class="java_plain">version</span></code> to declare dependencies between projects, you can use project dependencies.</p> 
+          <p>The method <code><span class="java_plain">project</span><span class="java_separator">(</span><span class="java_type">String</span><span class="java_separator">)</span><span class="java_plain"></span></code> takes the path to the other project</p> 
+          <pre class=" code"><code><span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_literal">&quot;commons-lang:commons-lang:2.4&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;Depends&nbsp;on&nbsp;the&nbsp;&quot;shared&quot;&nbsp;project</span>
+<span class="java_plain">&nbsp;&nbsp;implementation</span><span class="java_separator">(</span><span class="java_plain">project</span><span class="java_separator">(</span><span class="java_literal">&quot;:shared&quot;</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <p>Gradle automatically builds parts of the other project as needed (e.g. compiles classes for the compileClasspath or bundles a jar for the runtimeClasspath).</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Defining shared build logic</h2> 
+          <ul> 
+            <li>If you have multiple projects (or builds) you often want to share build logic</li> 
+            <li>Use <em>convention plugins</em> in a separate build for this. 
+              <ul> 
+                <li>You can use <a href="https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources"><code><span class="java_plain">buildSrc</span></code></a> which is a built-in included build. Just add a <code><span class="java_plain">buildSrc</span></code> directory into the root of your multi-project enables it.</li> 
+                <li>Or include another build using the <code><span class="java_plain">includeBuild</span><span class="java_separator">(...)</span><span class="java_plain"></span></code> statement</li> 
+              </ul></li> 
+            <li>The <code><span class="java_plain">build</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code> file should apply one plugin for plugin development 
+              <ul> 
+                <li><code><span class="java_plain">groovy</span><span class="java_operator">-</span><span class="java_plain">gradle</span><span class="java_operator">-</span><span class="java_plain">plugin</span></code> – write convention plugins as <code><span class="java_separator">.</span><span class="java_plain">gradle</span></code> files in <code><span class="java_plain">src</span><span class="java_operator">/</span><span class="java_plain">main</span><span class="java_operator">/</span><span class="java_plain">groovy</span></code>.</li> 
+                <li><code><span class="java_plain">kotlin</span><span class="java_operator">-</span><span class="java_plain">dsl</span></code> – write convention plugins as <code><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">.</span><span class="java_plain">kts</span></code> files in <code><span class="java_plain">src</span><span class="java_operator">/</span><span class="java_plain">main</span><span class="java_operator">/</span><span class="java_plain">kotlin</span></code>.</li> 
+                <li><code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">gradle</span><span class="java_operator">-</span><span class="java_plain">plugin</span></code> – write convention plugins as <code><span class="java_separator">.</span><span class="java_plain">java</span></code> classes that implement the <code><span class="java_type">Plugin</span><span class="java_operator">&lt;</span><span class="java_type">Project</span><span class="java_operator">&gt;</span><span class="java_plain"></span></code> interface in <code><span class="java_plain">src</span><span class="java_operator">/</span><span class="java_plain">main</span><span class="java_operator">/</span><span class="java_plain">java</span></code>.</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Write a convention plugin</h2> 
+          <h3>buildSrc/build.gradle</h3> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id&nbsp;</span><span class="java_separator">(</span><span class="java_literal">&quot;groovy-gradle-plugin&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;Use&nbsp;Groovy&nbsp;DSL&nbsp;for&nbsp;plugins</span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">repositories&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;gradlePluginPortal</span><span class="java_separator">()</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Write a convention plugin</h2> 
+          <h3>buildSrc/src/main/groovy/java-library-conventions.gradle</h3> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;A&nbsp;convention&nbsp;plugin&nbsp;looks&nbsp;just&nbsp;like&nbsp;a&nbsp;build&nbsp;script</span>
+<span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;java-library&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">named</span><span class="java_separator">(</span><span class="java_literal">&quot;test&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;useJUnitPlatform</span><span class="java_separator">()</span><span class="java_plain">&nbsp;</span><span class="java_comment">//&nbsp;Use&nbsp;JUnit&nbsp;5&nbsp;for&nbsp;unit&nbsp;tests</span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain">dependencies&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;testImplementation</span><span class="java_separator">(</span><span class="java_literal">&quot;org.junit.jupiter:junit-jupiter-api:5.6.2&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;testRuntimeOnly</span><span class="java_separator">(</span><span class="java_literal">&quot;org.junit.jupiter:junit-jupiter-engine&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <h3>lib/build.gradle</h3> 
+          <pre class=" code"><code><span class="java_plain">plugins&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;Use&nbsp;our&nbsp;convention&nbsp;plugin&nbsp;instead&nbsp;of&nbsp;&quot;java-library&quot;</span>
+<span class="java_plain">&nbsp;&nbsp;id</span><span class="java_separator">(</span><span class="java_literal">&quot;java-library-conventions&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Lab</h1> 
+            <p style="font-weight: bold;">04-lab-build-logic</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Custom Build Logic</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Tasks and Files</h2> 
+          <ul> 
+            <li>Files are predominately the inputs and outputs of tasks</li> 
+            <li>Configuration parameters (e.g. String, Integer, ...) can be also be used as inputs</li> 
+            <li>Gradle tracks the implementation of the task as an input</li> 
+            <li>Gradle offers its own types for representing files/directories</li> 
+            <li>Properties using these types have knowledge about the task that produces them 
+              <ul> 
+                <li>If an output of task A becomes the input of task B, Gradle automatically executes A before B</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>File/Directory types</h2> 
+          <ul> 
+            <li>File/Directory types that are immutable: 
+              <ul> 
+                <li><code><span class="java_type">RegularFile</span><span class="java_plain"></span></code> points at a concrete file</li> 
+                <li><code><span class="java_type">Directory</span><span class="java_plain"></span></code> points at a concrete directory</li> 
+                <li><code><span class="java_type">FileCollection</span><span class="java_plain"></span></code> a collection of files that can be located in different places</li> 
+              </ul></li> 
+            <li>File/Directory types that are configurable: 
+              <ul> 
+                <li><code><span class="java_type">RegularFileProperty</span><span class="java_plain"></span></code> a file that can be changed during build configuration</li> 
+                <li><code><span class="java_type">DirectoryProperty</span><span class="java_plain"></span></code> a directory that can be changed during build configuration</li> 
+                <li><code><span class="java_type">ConfigurableFileCollection</span><span class="java_plain"></span></code> add/remove files during build configuration</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>File/Directory types (cont)</h2> 
+          <ul> 
+            <li>Typically, you'll need locations relative to the project directory or build directory 
+              <ul> 
+                <li><code><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">buildDirectory</span><span class="java_separator">.</span><span class="java_plain">dir</span><span class="java_separator">(</span><span class="java_literal">&quot;myTargetDir&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code> directory relative to the <code><span class="java_plain">build</span></code> folder</li> 
+                <li><code><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">buildDirectory</span><span class="java_separator">.</span><span class="java_plain">file</span><span class="java_separator">(</span><span class="java_literal">&quot;myTargetFile&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code> file relative to the <code><span class="java_plain">build</span></code> folder</li> 
+                <li><code><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">projectDirectory</span><span class="java_separator">.</span><span class="java_plain">dir</span><span class="java_separator">(</span><span class="java_literal">&quot;myTargetDir&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code> dir relative to the project folder</li> 
+                <li><code><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">projectDirectory</span><span class="java_separator">.</span><span class="java_plain">file</span><span class="java_separator">(</span><span class="java_literal">&quot;myTargetFile&quot;</span><span class="java_separator">)</span><span class="java_plain"></span></code> file relative to the project folder</li> 
+              </ul></li> 
+            <li>All file/directory types can be converted back to <code><span class="java_plain">java</span><span class="java_separator">.</span><span class="java_plain">io</span><span class="java_separator">.</span><span class="java_type">File</span><span class="java_plain"></span></code> during task execution. 
+              <ul> 
+                <li><code><span class="java_type">RegularFile</span><span class="java_separator">.</span><span class="java_plain">asFile</span></code>, <code><span class="java_type">Directory</span><span class="java_separator">.</span><span class="java_plain">asFile</span></code>, <code><span class="java_type">FileCollection</span><span class="java_separator">.</span><span class="java_plain">files</span><span class="java_separator">()</span><span class="java_plain"></span></code></li> 
+              </ul></li> 
+            <li>Be careful to not do this during configuration time: 
+              <ul> 
+                <li>The property may not be configured yet</li> 
+                <li>The file may not be created yet (this produces a deprecation warning)</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Writing a task</h2> 
+          <ul> 
+            <li>An abstract class that extends <code><span class="java_type">DefaultTask</span><span class="java_plain"></span></code></li> 
+            <li>This can be written in pure Java, Groovy, Kotlin or another JVM language</li> 
+            <li>Define properties as annotated abstract getter methods (e.g., <code><span class="java_plain">getPropertyName</span><span class="java_separator">()</span><span class="java_plain"></span></code>) 
+              <ul> 
+                <li><code><span class="java_plain">@</span><span class="java_type">InputFile</span><span class="java_plain"></span></code>, <code><span class="java_plain">@</span><span class="java_type">InputFiles</span><span class="java_plain"></span></code>, <code><span class="java_plain">@</span><span class="java_type">OutputFile</span><span class="java_plain"></span></code>, <code><span class="java_plain">@</span><span class="java_type">OutputDirectory</span><span class="java_plain"></span></code></li> 
+                <li>See for <a href="https://docs.gradle.org/nightly/userguide/more_about_tasks.html#sec:up_to_date_checks">user manual</a> more details</li> 
+              </ul></li> 
+            <li>Each task should have at least one input and one output 
+              <ul> 
+                <li>Gradle uses this to track if the task needs to be executed again or if the previous execution result can be reused</li> 
+                <li>It is also used to cache results in the <a href="https://docs.gradle.org/nightly/userguide/build_cache.html">build cache</a></li> 
+                <li>If input and/or outputs are missing, the task will never be <code><span class="java_plain">UP</span><span class="java_operator">-</span><span class="java_plain">TO</span><span class="java_operator">-</span><span class="java_plain">DATE</span></code> or <code><span class="java_plain">FROM</span><span class="java_operator">-</span><span class="java_plain">CACHE</span></code></li> 
+              </ul></li> 
+            <li>Each task has at least one action implemented in a method annotated with <code><span class="java_plain">@</span><span class="java_type">TaskAction</span><span class="java_plain"></span></code> 
+              <ul> 
+                <li>Usually you have only one action method</li> 
+                <li>From there you can delegate to other methods or classes or even call external tools</li> 
+              </ul></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Example task</h2> 
+          <pre class=" code"><code><span class="java_keyword">public</span><span class="java_plain">&nbsp;</span><span class="java_keyword">abstract</span><span class="java_plain">&nbsp;</span><span class="java_keyword">class</span><span class="java_plain">&nbsp;</span><span class="java_type">JarSize</span><span class="java_plain">&nbsp;</span><span class="java_keyword">extends</span><span class="java_plain">&nbsp;</span><span class="java_type">DefaultTask</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;@</span><span class="java_type">InputFile</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">public</span><span class="java_plain">&nbsp;</span><span class="java_keyword">abstract</span><span class="java_plain">&nbsp;</span><span class="java_type">RegularFileProperty</span><span class="java_plain">&nbsp;getJar</span><span class="java_separator">();</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;@</span><span class="java_type">OutputFile</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">public</span><span class="java_plain">&nbsp;</span><span class="java_keyword">abstract</span><span class="java_plain">&nbsp;</span><span class="java_type">RegularFileProperty</span><span class="java_plain">&nbsp;getJarSizeTxt</span><span class="java_separator">();</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;@</span><span class="java_type">TaskAction</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_keyword">public</span><span class="java_plain">&nbsp;</span><span class="java_type">void</span><span class="java_plain">&nbsp;calculateSize</span><span class="java_separator">()</span><span class="java_plain">&nbsp;</span><span class="java_keyword">throws</span><span class="java_plain">&nbsp;</span><span class="java_type">IOException</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;java</span><span class="java_separator">.</span><span class="java_plain">io</span><span class="java_separator">.</span><span class="java_type">File</span><span class="java_plain">&nbsp;jarFile&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;getJar</span><span class="java_separator">().</span><span class="java_plain">get</span><span class="java_separator">().</span><span class="java_plain">getAsFile</span><span class="java_separator">();</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;java</span><span class="java_separator">.</span><span class="java_plain">io</span><span class="java_separator">.</span><span class="java_type">FileWriter</span><span class="java_plain">&nbsp;txtFile&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;</span><span class="java_keyword">new</span><span class="java_plain">&nbsp;java</span><span class="java_separator">.</span><span class="java_plain">io</span><span class="java_separator">.</span><span class="java_type">FileWriter</span><span class="java_separator">(</span><span class="java_plain">getJarSizeTxt</span><span class="java_separator">().</span><span class="java_plain">get</span><span class="java_separator">().</span><span class="java_plain">getAsFile</span><span class="java_separator">());</span><span class="java_plain">&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;txtFile</span><span class="java_separator">.</span><span class="java_plain">append</span><span class="java_separator">(</span><span class="java_literal">&quot;Jar&nbsp;size&nbsp;is&nbsp;&quot;</span><span class="java_plain">&nbsp;</span><span class="java_operator">+</span><span class="java_plain">&nbsp;jarFile</span><span class="java_separator">.</span><span class="java_plain">length</span><span class="java_separator">());</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;txtFile</span><span class="java_separator">.</span><span class="java_plain">close</span><span class="java_separator">();</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Wiring inputs and outputs</h2> 
+          <ul> 
+            <li>Use <code><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">register</span><span class="java_operator">&lt;</span><span class="java_type">TaskClass</span><span class="java_operator">&gt;</span><span class="java_separator">(</span><span class="java_literal">&quot;taskName&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_comment">/*&nbsp;task&nbsp;configuration&nbsp;*/</span><span class="java_plain">&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span></code></li> 
+            <li>You set the properties in the configuration block</li> 
+            <li>If you set an input property to the output of another task, Gradle will treat this as a task dependency</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;Kotlin&nbsp;DSL</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">register</span><span class="java_operator">&lt;</span><span class="java_type">JarSize</span><span class="java_operator">&gt;</span><span class="java_separator">(</span><span class="java_literal">&quot;jarSize&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;Set&nbsp;the&nbsp;input&nbsp;to&nbsp;the&nbsp;'archiveFile'&nbsp;ouput&nbsp;of&nbsp;the&nbsp;'jar'&nbsp;task</span>
+<span class="java_plain">&nbsp;&nbsp;jar</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">jar</span><span class="java_separator">.</span><span class="java_plain">get</span><span class="java_separator">().</span><span class="java_plain">archiveFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;</span><span class="java_comment">//&nbsp;Set&nbsp;the&nbsp;output&nbsp;to&nbsp;a&nbsp;file&nbsp;in&nbsp;the&nbsp;'buildDirectory'</span>
+<span class="java_plain">&nbsp;&nbsp;jarSizeTxt</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">buildDirectory</span><span class="java_separator">.</span><span class="java_plain">file</span><span class="java_separator">(</span><span class="java_literal">&quot;reporting/jarSize.txt&quot;</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Groovy&nbsp;DSL</span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">register</span><span class="java_separator">(</span><span class="java_literal">&quot;jarSize&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">JarSize</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;jar</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">jar</span><span class="java_separator">.</span><span class="java_plain">archiveFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;jarSizeTxt</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">buildDirectory</span><span class="java_separator">.</span><span class="java_plain">file</span><span class="java_separator">(</span><span class="java_literal">&quot;reporting/jarSize.txt&quot;</span><span class="java_separator">))</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Extensions</h2> 
+          <ul> 
+            <li>Extension are a central place to configure a plugin (e.g. <code><span class="java_plain">java&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span><span class="java_separator">}</span><span class="java_plain"></span></code>)</li> 
+            <li>Use extensions to avoid direct task configurations in build files</li> 
+            <li>Extensions are implemented as plain abstract classes, like tasks</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Extension (definition)</h2> 
+          <ul> 
+            <li>Define the extension type (e.g. as Java interface)</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_keyword">public</span><span class="java_plain">&nbsp;</span><span class="java_keyword">interface</span><span class="java_plain">&nbsp;</span><span class="java_type">JarSizeExtension</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="java_type">RegularFileProperty</span><span class="java_plain">&nbsp;getTxtFile</span><span class="java_separator">();</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+          <ul> 
+            <li>In your plugin: create the extension and wire it to the task(s)</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_comment">//&nbsp;Kotlin&nbsp;DSL</span>
+<span class="java_plain">val&nbsp;size&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;extensions</span><span class="java_separator">.</span><span class="java_plain">create</span><span class="java_operator">&lt;</span><span class="java_type">SizeExtension</span><span class="java_operator">&gt;</span><span class="java_separator">(</span><span class="java_literal">&quot;size&quot;</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">register</span><span class="java_operator">&lt;</span><span class="java_type">JarSize</span><span class="java_operator">&gt;</span><span class="java_separator">(</span><span class="java_literal">&quot;jarSize&quot;</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;jar</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">jar</span><span class="java_separator">.</span><span class="java_plain">get</span><span class="java_separator">().</span><span class="java_plain">archiveFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;jarSizeTxt</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">size</span><span class="java_separator">.</span><span class="java_plain">txtFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span>
+<span class="java_plain"></span>
+<span class="java_comment">//&nbsp;Groovy&nbsp;DSL</span>
+<span class="java_keyword">def</span><span class="java_plain">&nbsp;size&nbsp;</span><span class="java_operator">=</span><span class="java_plain">&nbsp;extensions</span><span class="java_separator">.</span><span class="java_plain">create</span><span class="java_separator">(</span><span class="java_literal">&quot;size&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">SizeExtension</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">register</span><span class="java_separator">(</span><span class="java_literal">&quot;jarSize&quot;</span><span class="java_separator">,</span><span class="java_plain">&nbsp;</span><span class="java_type">JarSize</span><span class="java_separator">)</span><span class="java_plain">&nbsp;</span><span class="java_separator">{</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;jar</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">tasks</span><span class="java_separator">.</span><span class="java_plain">jar</span><span class="java_separator">.</span><span class="java_plain">archiveFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;jarSizeTxt</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">size</span><span class="java_separator">.</span><span class="java_plain">txtFile</span><span class="java_separator">)</span><span class="java_plain"></span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Extension (usage)</h2> 
+          <ul> 
+            <li>In the <code><span class="java_plain">build</span><span class="java_separator">.</span><span class="java_plain">gradle</span><span class="java_separator">(.</span><span class="java_plain">kts</span><span class="java_separator">)</span><span class="java_plain"></span></code> file you can then use the extension</li> 
+          </ul> 
+          <pre class=" code"><code><span class="java_plain">size&nbsp;</span><span class="java_separator">{</span><span class="java_plain">&nbsp;</span>
+<span class="java_plain">&nbsp;&nbsp;&nbsp;&nbsp;txtFile</span><span class="java_separator">.</span><span class="java_plain">set</span><span class="java_separator">(</span><span class="java_plain">layout</span><span class="java_separator">.</span><span class="java_plain">buildDirectory</span><span class="java_separator">.</span><span class="java_plain">file</span><span class="java_separator">(</span><span class="java_literal">&quot;custom/size.txt&quot;</span><span class="java_separator">))</span><span class="java_plain">&nbsp;</span>
+<span class="java_separator">}</span><span class="java_plain"></span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Lab</h1> 
+            <p style="font-weight: bold;">05-custom-tasks</p> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide title-slide">
+      <div class="inner">
+        <div class="inner"> 
+          <div class="title-slide-content"> 
+            <h1>Wrapping up</h1> 
+          </div> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Performance features</h2> 
+          <h3>Build caching</h3> 
+          <p>Gradle will <a href="https://docs.gradle.org/current/userguide/build_cache.html#header">skip execution of some work</a> if it has been done before, even on other machines.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;build&nbsp;</span><span class="java_operator">--</span><span class="java_plain">build</span><span class="java_operator">-</span><span class="java_plain">cache</span></code></pre> 
+          <h3>File system watching</h3> 
+          <p>Gradle will <a href="https://blog.gradle.org/introducing-file-system-watching">watch files on disk</a> and skip to executing tasks more quickly.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;build&nbsp;</span><span class="java_operator">--</span><span class="java_plain">watch</span><span class="java_operator">-</span><span class="java_plain">fs</span></code></pre> 
+          <h3>Parallel Builds</h3> 
+          <p>Run independent tasks from different projects in parallel.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;build&nbsp;</span><span class="java_operator">--</span><span class="java_plain">parallel</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Useful features</h2> 
+          <h3>Continue after Failure</h3> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;build&nbsp;</span><span class="java_operator">--</span><span class="java_keyword">continue</span><span class="java_plain"></span></code></pre> 
+          <p>Especially useful for CI builds.</p> 
+          <h3>Continuous Build</h3> 
+          <p>When the build completes, instead of exiting, <a href="https://docs.gradle.org/current/userguide/command_line_interface.html#sec:continuous_build">watch the inputs of executed tasks</a> and re-run the build when an input changes.</p> 
+          <pre class=" code"><code><span class="java_plain">$&nbsp;gradle&nbsp;build&nbsp;</span><span class="java_operator">--</span><span class="java_plain">continuous</span></code></pre> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Standard Gradle plugins</h2> 
+          <p>Gradle ships with many useful plugins.</p> 
+          <p>Some examples:</p> 
+          <ul> 
+            <li><code><span class="java_plain">java</span><span class="java_operator">-</span><span class="java_plain">library</span></code> - compile, test, and package Java projects</li> 
+            <li><code><span class="java_plain">checkstyle</span></code> - static analysis for Java code</li> 
+            <li><code><span class="java_plain">maven</span><span class="java_operator">-</span><span class="java_plain">publish</span></code> - upload artifacts to Apache Maven repositories</li> 
+            <li><code><span class="java_plain">groovy</span></code> - compile, test, package, upload Groovy projects</li> 
+            <li><code><span class="java_plain">scala</span></code> - compile, test, package, upload Scala projects</li> 
+            <li><code><span class="java_plain">application</span></code> - support packaging your Java code as a runnable application</li> 
+            <li><code><span class="java_plain">cpp</span><span class="java_operator">-</span><span class="java_plain">library</span></code> - support building native binaries using gcc, clang or visual-cpp</li> 
+          </ul> 
+          <p>Many more, <a href="https://www.gradle.org/docs/current/userguide/standard_plugins.html">listed in the Gradle User Manual</a>.</p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Gradle Plugin Portal</h2> 
+          <ul> 
+            <li>Search and discover community plugins on <a href="https://plugins.gradle.org/">plugins.gradle.org/</a></li> 
+            <li>Plugin JARs and their metadata are hosted by Gradle Inc.</li> 
+          </ul> 
+          <p><br /> <img src="images/plugin-portal.png" alt="Plugin Portal" /></p> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Notable community plugins</h2> 
+          <ul> 
+            <li><a href="https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm">Kotlin JVM plugin</a> - Builds Kotlin code</li> 
+            <li><a href="https://plugins.gradle.org/plugin/org.springframework.boot">Spring Boot plugin</a> - Builds Spring boot applications</li> 
+            <li><a href="https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow">Shadow plugin</a> - Builds shaded jars</li> 
+            <li><a href="https://plugins.gradle.org/plugin/com.github.spotbugs">Spotbugs plugin</a> - Runs SpotBugs analysis on Java code</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Other Gradle Inc plugins</h2> 
+          <ul> 
+            <li><a href="https://plugins.gradle.org/plugin/com.gradle.enterprise">Gradle Enterprise</a> - Generates build scans.</li> 
+            <li><a href="https://plugins.gradle.org/plugin/com.gradle.enterprise.test-distribution">Gradle Enterprise Test distribution</a> - Distributes tests across multiple machines.</li> 
+            <li><a href="https://plugins.gradle.org/plugin/org.gradle.test-retry">Gradle Test Retry</a> - Mitigate flaky tests by retrying tests when they fail.</li> 
+          </ul> 
+        </div>
+      </div>  
+    </section> 
+    <section class="slide">
+      <div class="inner">
+        <div class="inner"> 
+          <h2>Thank You!</h2> 
+          <ul> 
+            <li>Thank you for attending!</li> 
+            <li>Questions?</li> 
+            <li>Feedback?</li> 
+            <li><a href="https://gradle.org">gradle.org</a></li> 
+            <li><a href="https://gradle.com">gradle.com</a></li> 
+          </ul> 
+        </div>
+      </div>  
+    </section>   
+    <div class="deck-notes"> 
+      <div class="deck-notes-header">
+        Slide Notes…
+      </div> 
+      <div class="deck-notes-container"></div> 
+    </div> 
+    <div class="slide-number"></div> 
+  </body>
+</html>

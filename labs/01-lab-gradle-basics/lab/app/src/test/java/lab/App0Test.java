@@ -1,0 +1,12 @@
+package lab;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class App0Test {
+    @Test public void testAppHasAGreeting() throws Exception {
+        Thread.sleep(100);
+        App classUnderTest = new App();
+        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+    }
+}
